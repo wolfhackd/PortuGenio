@@ -1,29 +1,11 @@
-import { Brain } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { Menubar } from '@/components/menubar';
 import { Button } from '@/components/ui/button';
 import type { UseFooterItens } from '@/utils/types/use-footer-itens';
-import type { UseMenuItem } from '@/utils/types/use-menu-item';
 
 export const Home = () => {
   const navigate = useNavigate();
-  const menuItems: UseMenuItem[] = [
-    {
-      label: 'Início ',
-      path: '',
-    },
-    {
-      label: 'Corrigir Frase',
-      path: '',
-    },
-    {
-      label: 'Quiz ',
-      path: '',
-    },
-    {
-      label: 'Sobre ',
-      path: '',
-    },
-  ];
+
   const footerItems: UseFooterItens[] = [
     {
       label: 'Política de Privacidade',
@@ -41,20 +23,7 @@ export const Home = () => {
 
   return (
     <div className="flex h-screen w-screen flex-col">
-      <div className="flex items-center justify-between px-10 py-2">
-        <Brain className="size-14 text-white" />
-        <nav>
-          {menuItems.map((item) => (
-            <Button
-              className="cursor-pointer"
-              key={item.label}
-              variant={'link'}
-            >
-              {item.label}
-            </Button>
-          ))}
-        </nav>
-      </div>
+      <Menubar />
       <div className="flex flex-1 flex-col items-center justify-center gap-8">
         <h1 className="font-bold text-6xl">
           Aprenda Gramática com Inteligência Artificial
