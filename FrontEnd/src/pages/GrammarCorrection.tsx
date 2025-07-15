@@ -1,15 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import type { TextCorrectionRequest } from '@/utils/types/text-correction-request';
 
 export const GrammarCorrection = () => {
   const GrammarCorrectionSchema = z.object({
@@ -27,16 +32,21 @@ export const GrammarCorrection = () => {
     },
   });
 
-  async function handleCorrectionSubmit({
-    textForCorrection,
-  }: CorrectionFormData) {
+  // const correction = useMutation({
+  //   mutationFn: async (data: TextCorrectionRequest) => {
+  //     axios.post()
+  //   },
+  // });
+
+  function handleCorrectionSubmit({ textForCorrection }: CorrectionFormData) {
     // Falta terminar
     // await sendCorrectionRequest({ textForCorrection });
     correctionForm.reset();
+    // setBotResponse();
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-6">
+    <div className="scrollbar-none flex h-screen flex-col items-center justify-center overflow-y-scroll py-6">
       <Card className="w-4/5 flex-1">
         <CardHeader>
           <CardTitle className="text-center text-4xl">
@@ -44,29 +54,43 @@ export const GrammarCorrection = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form {...correctionForm}>
-            <form
-              onSubmit={correctionForm.handleSubmit(handleCorrectionSubmit)}
-            >
-              <FormField
-                control={correctionForm.control}
-                name="textForCorrection"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          placeholder="“Digite aqui sua frase…”"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-            </form>
-          </Form>
+          <div>
+            <Form {...correctionForm}>
+              <form
+                onSubmit={correctionForm.handleSubmit(handleCorrectionSubmit)}
+              >
+                <FormField
+                  control={correctionForm.control}
+                  name="textForCorrection"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel>Seu Texto</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder="“Digite aqui sua frase…”"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <Button className="mt-4 w-full cursor-pointer" type="submit">
+                  {/* {BotResponse != null ? 'Nova Correção' : 'Corrigir'} */}
+                  Corrigir
+                </Button>
+              </form>
+            </Form>
+          </div>
+          <div className="mt-4">
+            <p className="block py-2 font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Correção
+            </p>
+            {/* <Textarea placeholder="Resposta" readOnly value={BotResponse} /> */}
+            <Textarea placeholder="Resposta" readOnly />
+          </div>
         </CardContent>
       </Card>
     </div>
