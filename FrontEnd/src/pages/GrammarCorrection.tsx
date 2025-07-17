@@ -1,7 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { Copy } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,10 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Toaster } from '@/components/ui/sonner';
 import { Textarea } from '@/components/ui/textarea';
 import type { TextCorrectionRequest } from '@/utils/types/text-correction-request';
 
 export const GrammarCorrection = () => {
+  const [botResponse, setBotResponse] = useState('');
+  const responseRef = useRef<HTMLTextAreaElement>(null);
+
   const GrammarCorrectionSchema = z.object({
     textForCorrection: z
       .string()
@@ -32,64 +39,104 @@ export const GrammarCorrection = () => {
     },
   });
 
-  // const correction = useMutation({
-  //   mutationFn: async (data: TextCorrectionRequest) => {
-  //     axios.post()
-  //   },
-  // });
+  const correction = useMutation({
+    mutationFn: async (data: TextCorrectionRequest) => {
+      const response = await axios.post(
+        'http://localhost:3333/correction',
+        data
+      );
+      return response.data;
+    },
+    onSuccess(data) {
+      setBotResponse(data?.text);
+    },
+  });
 
-  function handleCorrectionSubmit({ textForCorrection }: CorrectionFormData) {
-    // Falta terminar
-    // await sendCorrectionRequest({ textForCorrection });
+  async function handleCorrectionSubmit({
+    textForCorrection,
+  }: CorrectionFormData) {
+    await correction.mutateAsync({ text: textForCorrection });
     correctionForm.reset();
-    // setBotResponse();
   }
 
+  const copyText = () => {
+    if (botResponse != null || '') {
+      navigator.clipboard.writeText(botResponse).then(() => {
+        toast.success('Copiado para a área de transferência.');
+      });
+    }
+  };
+
   return (
-    <div className="scrollbar-none flex h-screen flex-col items-center justify-center overflow-y-scroll py-6">
-      <Card className="w-4/5 flex-1">
-        <CardHeader>
-          <CardTitle className="text-center text-4xl">
-            Correção de frases/textos
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-10 text-zinc-100">
+      <Toaster />
+      <Card className="w-full max-w-2xl rounded-2xl bg-zinc-900 shadow-xl">
+        <CardHeader className="text-center">
+          <CardTitle className="font-bold text-3xl">
+            Correção Gramatical
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div>
-            <Form {...correctionForm}>
-              <form
-                onSubmit={correctionForm.handleSubmit(handleCorrectionSubmit)}
+          <Form {...correctionForm}>
+            <form
+              className="space-y-4"
+              onSubmit={correctionForm.handleSubmit(handleCorrectionSubmit)}
+            >
+              <FormField
+                control={correctionForm.control}
+                name="textForCorrection"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-zinc-300">
+                      Digite seu texto
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        className="border-zinc-700 bg-zinc-800 text-zinc-100"
+                        placeholder="Ex: Eu vai na escola amanhã"
+                        rows={4}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                className="w-full cursor-pointer bg-indigo-600 font-semibold text-white hover:bg-indigo-700"
+                disabled={correction.isPending}
+                type="submit"
               >
-                <FormField
-                  control={correctionForm.control}
-                  name="textForCorrection"
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormLabel>Seu Texto</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            placeholder="“Digite aqui sua frase…”"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-                <Button className="mt-4 w-full cursor-pointer" type="submit">
-                  {/* {BotResponse != null ? 'Nova Correção' : 'Corrigir'} */}
-                  Corrigir
+                {correction.isPending ? 'Corrigindo...' : 'Corrigir'}
+              </Button>
+            </form>
+          </Form>
+
+          <div className=" mt-6 ">
+            <div className="flex items-center justify-between">
+              <p className="mb-2 font-semibold text-sm text-zinc-400">
+                Correção
+              </p>
+              {botResponse && (
+                <Button
+                  className={'top-0 right-2 cursor-pointer'}
+                  onClick={copyText}
+                  size={'icon'}
+                  variant={'ghost'}
+                >
+                  <Copy />
                 </Button>
-              </form>
-            </Form>
-          </div>
-          <div className="mt-4">
-            <p className="block py-2 font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Correção
-            </p>
-            {/* <Textarea placeholder="Resposta" readOnly value={BotResponse} /> */}
-            <Textarea placeholder="Resposta" readOnly />
+              )}
+            </div>
+            <Textarea
+              className="border-zinc-700 bg-zinc-800 text-zinc-100"
+              placeholder="A correção aparecerá aqui"
+              readOnly
+              ref={responseRef}
+              rows={4}
+              value={botResponse}
+            />
           </div>
         </CardContent>
       </Card>
