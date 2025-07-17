@@ -5,6 +5,7 @@ import { Copy } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { BackPage } from '@/components/BackPage';
 import { TextWithCorrections } from '@/components/TextWithCorrections';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,8 +39,7 @@ export const GrammarCorrection = () => {
   const correction = useMutation({
     mutationFn: async (data: { text: string }) => {
       const res = await axios.post('http://localhost:3333/correction', data);
-      console.log(res?.data);
-      return res.data; // { text: string, errors: [{ word: string, reason: string }] }
+      return res.data;
     },
     onSuccess(data) {
       setOriginalText(form.getValues('textForCorrection'));
@@ -62,7 +62,8 @@ export const GrammarCorrection = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-10 text-zinc-100">
+    <div className="relative flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-10 text-zinc-100">
+      <BackPage className={'absolute top-3 left-5 cursor-pointer'} />
       <Card className="w-full max-w-3xl rounded-2xl bg-zinc-900 shadow-xl">
         <CardHeader>
           <CardTitle className="text-center font-bold text-3xl">
