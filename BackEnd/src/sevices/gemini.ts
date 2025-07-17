@@ -8,35 +8,70 @@ const gemini = new GoogleGenAI({
 const model = 'gemini-2.5-flash';
 
 export async function correctionGrammatical(userText: string) {
-  const prompt = `
-    Tarefa:
-    Corrija o texto abaixo com base nas regras da gramática normativa da língua portuguesa.
+const prompt = `
+Tarefa:
+Corrija o texto abaixo com base nas regras da gramática normativa da língua portuguesa.
 
-    Regras obrigatórias:
+Regras obrigatórias:
+1. Corrija erros ortográficos, de acentuação, pontuação, concordância verbal e nominal, regência e uso de pronomes.
+2. Não mude o significado original do texto.
+3. Mantenha o mesmo tom (formal ou informal).
+4. Não use sinônimos desnecessários nem reescreva informalmente.
 
-    Corrija erros ortográficos (ex: “concerteza” → “com certeza”).
+Formato da resposta:
+Retorne a resposta em **formato JSON**, no seguinte padrão:
 
-    Corrija erros de acentuação (ex: “voce” → “você”).
+{
+  "text": "Texto corrigido aqui.",
+  "errors": [
+    {
+      "word": "palavra ou trecho original",
+      "reason": "descrição da correção feita",
+      "start": 5,
+      "end": 10
+    }
+  ]
+}
 
-    Corrija pontuação inadequada (ex: vírgulas, pontos finais, interrogação, etc).
+Importante:
+NÃO use blocos de código (ex: crases \`\`\` ou \`\`\`json). Apenas envie o JSON puro, sem marcações extras.
 
-    Corrija erros gramaticais (ex: concordância verbal e nominal, regência, uso correto de pronomes).
+Texto a ser corrigido:
+"${userText.trim()}"
+`.trim();
 
-    Não mude o sentido do texto original.
+// const prompt = `
+// Tarefa:
+// Corrija o texto abaixo com base nas regras da gramática normativa da língua portuguesa.
 
-    Não reescreva informalmente nem use sinônimos desnecessários.
+// Regras obrigatórias:
+// 1. Corrija erros ortográficos, de acentuação, pontuação, concordância verbal e nominal, regência e uso de pronomes.
+// 2. Não mude o significado original do texto.
+// 3. Mantenha o mesmo tom (formal ou informal).
+// 4. Não use sinônimos desnecessários nem reescreva informalmente.
 
-    Mantenha o tom original (formal ou informal) do texto.
+// Formato da resposta:
+// Retorne a resposta em **formato JSON**, no seguinte padrão:
 
-    A saída deve ser apenas o texto corrigido, sem explicações.
+// {
+//   "text": "Texto corrigido aqui.",
+//   "errors": [
+//     {
+//       "word": "palavra ou trecho original",
+//       "reason": "descrição da correção feita",
+//       "start": o índice do caractere onde o erro começa no texto original (contando do zero).,
+//       "end": o índice do caractere logo após o fim do erro (ou seja, o erro corresponde a texto.substring(start, end)).
 
-    Formato da resposta esperado:
-    Texto corrido, somente com as correções aplicadas.
+//     }
+//   ]
+// }
 
-    Abaixo o texto a ser corrigido:
+// Importante:
+// NÃO use blocos de código (ex: crases \`\`\` ou \`\`\`json). Apenas envie o JSON puro, sem marcações extras.
 
-    ${userText.trim()}
-    `.trim();
+// Texto a ser corrigido:
+// "${userText.trim()}"
+// `.trim();
 
   const response = await gemini.models.generateContent({
     model,
@@ -47,9 +82,42 @@ export async function correctionGrammatical(userText: string) {
     ],
   });
 
-  if (!response) {
-    throw new Error('Não foi possível gerar a resposta');
+if (!response || !response.text) {
+  throw new Error('Não foi possível gerar a resposta');
+}
+
+  try {
+  const cleaned = response.text
+    .replace(/```json/g, '')
+    .replace(/```/g, '')
+    .trim();
+
+  const parsed = JSON.parse(cleaned);
+
+  if (parsed.text && typeof parsed.text === 'object' && parsed.text.text) {
+    return {
+      text: parsed.text.text,
+      errors: parsed.text.errors || [],
+    };
   }
 
-  return response.text;
+  return parsed;
+} catch (e) {
+  console.error('Erro ao fazer parse da resposta JSON:', response.text);
+  throw new Error('Resposta inesperada do modelo');
 }
+}
+
+// anotação preciso que volte isso pra o front
+
+// {
+//   ('text');
+//   : "Eu vou na escola amanhã.",
+//   "errors": [
+//   {
+//     ('word');
+//     : "vai",
+//       "reason": "Uso incorreto do verbo. O correto seria 'vou'."
+//   }
+//   ]
+// }

@@ -4,12 +4,21 @@ import { correctionGrammatical } from '../sevices/gemini.ts';
 
 export const grammarCorrectionRoute: FastifyPluginCallbackZod = (app) => {
   const correctionSchema = z.object({
-    textForCorrection: z.string().nonempty(),
+    text: z.string().nonempty(),
   });
 
   app.post('/correction', async (request, reply) => {
-    const { textForCorrection } = correctionSchema.parse(request.body);
-    const result = await correctionGrammatical(textForCorrection);
-    return reply.status(201).send(result);
+    const { text } = correctionSchema.parse(request.body);
+    const result = await correctionGrammatical(text);
+
+    const corrected =
+      result.text && typeof result.text === 'object' && result.text.text
+        ? {
+            text: result.text.text,
+            errors: result.text.errors ?? [],
+          }
+        : result;
+
+    return reply.status(201).send(corrected);
   });
 };
