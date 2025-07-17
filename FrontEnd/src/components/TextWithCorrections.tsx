@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/performance/useTopLevelRegex: <explanation> */
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
 import {
   Tooltip,
   TooltipContent,
@@ -10,6 +8,8 @@ import {
 interface ErrorData {
   word: string;
   reason: string;
+  start: number;
+  end: number;
 }
 
 interface TextWithCorrectionsProps {
@@ -21,45 +21,48 @@ export const TextWithCorrections = ({
   text,
   errors,
 }: TextWithCorrectionsProps) => {
-  // Quebra por espaços (preserva espaços, pontuações e acentuação)
-  const tokens = text.split(/(\s+)/); // divide por espaço mas mantém os espaços
+  if (errors.length === 0) return <>{text}</>;
+
+  // Ordena os erros pelo índice de início para renderizar em ordem
+  const sortedErrors = [...errors].sort((a, b) => a.start - b.start);
+
+  const parts: React.ReactNode[] = [];
+  let cursor = 0;
+
+  sortedErrors.forEach((error, i) => {
+    // Pega o texto entre o cursor e o início do erro (trecho normal)
+    if (cursor < error.start) {
+      parts.push(
+        <span key={`text-${i}-before`}>{text.slice(cursor, error.start)}</span>
+      );
+    }
+
+    // Pega o texto do erro destacado
+    parts.push(
+      <Tooltip key={`error-${i}`}>
+        <TooltipTrigger asChild>
+          <span className="cursor-help text-red-400 underline decoration-2 decoration-red-500">
+            {text.slice(error.start, error.end)}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-xs border border-zinc-700 bg-zinc-800 text-white">
+          {error.reason}
+        </TooltipContent>
+      </Tooltip>
+    );
+
+    cursor = error.end;
+  });
+
+  // Texto depois do último erro
+  if (cursor < text.length) {
+    parts.push(<span key="text-after">{text.slice(cursor)}</span>);
+  }
 
   return (
     <TooltipProvider>
-      <div className="flex flex-wrap text-sm leading-relaxed">
-        {tokens.map((token, index) => {
-          // Tira pontuações do final para comparar com as palavras erradas
-          const cleanToken = token
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, ''); // remove acento
-          const tokenWithoutPunctuation = cleanToken.replace(/[.,;!?]/g, '');
-
-          const error = errors.find(
-            (err) =>
-              err.word.toLowerCase() === tokenWithoutPunctuation.toLowerCase()
-          );
-
-          if (error) {
-            return (
-              <Tooltip key={index}>
-                <TooltipTrigger asChild>
-                  <span className="cursor-help text-red-400 underline decoration-2 decoration-red-500">
-                    {token}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs border border-zinc-700 bg-zinc-800 text-white">
-                  {error.reason}
-                </TooltipContent>
-              </Tooltip>
-            );
-          }
-
-          return (
-            <span className="whitespace-pre-wrap" key={index}>
-              {token}
-            </span>
-          );
-        })}
+      <div className="flex flex-wrap whitespace-pre-wrap text-md leading-relaxed">
+        {parts}
       </div>
     </TooltipProvider>
   );
