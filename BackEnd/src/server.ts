@@ -7,6 +7,7 @@ import {
 } from 'fastify-type-provider-zod';
 import { env } from './env.ts';
 import { grammarCorrectionRoute } from './routes/grammar-correction.ts';
+import { portugueseTipRoute } from './routes/portugueseTip.ts';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -18,6 +19,7 @@ app.register(fastifyCors, {
 });
 
 app.register(grammarCorrectionRoute);
+app.register(portugueseTipRoute);
 
 app.get('/health', () => {
   return 'Ok';

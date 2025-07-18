@@ -1,6 +1,6 @@
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
-import { correctionGrammatical } from '../sevices/gemini.ts';
+import { correctionGrammatical } from '../sevices/gemini/correctionGrammatical.ts';
 
 export const grammarCorrectionRoute: FastifyPluginCallbackZod = (app) => {
   const correctionSchema = z.object({
