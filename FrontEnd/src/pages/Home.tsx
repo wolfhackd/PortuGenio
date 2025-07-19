@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
-import { Menubar } from '@/components/menubar';
+import { Menubar } from '@/components/Menubar';
+import { PortugueseTip } from '@/components/PortugueseTip';
 import { Button } from '@/components/ui/button';
 import type { UseFooterItens } from '@/utils/types/use-footer-itens';
 
@@ -32,10 +33,11 @@ export const Home = () => {
           Corrija frases, faça quizzes e aprenda de forma simples e prática.
         </p>
         {/* Dica da I.A */}
-        <span className="font-bold text-muted-foreground">
+        {/* <span className="font-bold text-muted-foreground">
           💡 “Lembre-se: ‘mas’ com S indica oposição, enquanto ‘mais’ com I
           indica quantidade.”
-        </span>
+        </span> */}
+        <PortugueseTip />
       </div>
       <footer className="flex w-full flex-col items-center justify-center p-4">
         <div>
