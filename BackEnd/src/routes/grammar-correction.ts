@@ -7,6 +7,8 @@ export const grammarCorrectionRoute: FastifyPluginCallbackZod = (app) => {
     text: z.string().nonempty(),
   });
 
+  // type CorrectionSchema = z.infer<typeof correctionSchema>;
+
   app.post('/correction', async (request, reply) => {
     const { text } = correctionSchema.parse(request.body);
     const result = await correctionGrammatical(text);
@@ -20,5 +22,6 @@ export const grammarCorrectionRoute: FastifyPluginCallbackZod = (app) => {
         : result;
 
     return reply.status(201).send(corrected);
+    // return reply.status(201).send(result);
   });
 };
