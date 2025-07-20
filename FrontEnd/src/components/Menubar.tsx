@@ -8,7 +8,7 @@ export const Menubar = () => {
   const menuItems: UseMenuItem[] = [
     {
       label: 'Início ',
-      path: '',
+      path: '/',
     },
     {
       label: 'Corrigir',
@@ -24,7 +24,7 @@ export const Menubar = () => {
     },
   ];
   return (
-    <div className="flex items-center justify-between px-10 py-2">
+    <div className="flex w-full items-center justify-between self-end px-10 py-2">
       <Brain className="size-14 text-white" />
       <nav>
         {menuItems.map((item) => (

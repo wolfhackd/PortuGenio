@@ -32,11 +32,6 @@ export const Home = () => {
         <p className="font-bold text-3xl">
           Corrija frases, faça quizzes e aprenda de forma simples e prática.
         </p>
-        {/* Dica da I.A */}
-        {/* <span className="font-bold text-muted-foreground">
-          💡 “Lembre-se: ‘mas’ com S indica oposição, enquanto ‘mais’ com I
-          indica quantidade.”
-        </span> */}
         <PortugueseTip />
       </div>
       <footer className="flex w-full flex-col items-center justify-center p-4">

@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   Tooltip,
   TooltipContent,
@@ -21,7 +22,9 @@ export const TextWithCorrections = ({
   text,
   errors,
 }: TextWithCorrectionsProps) => {
-  if (errors.length === 0) return <>{text}</>;
+  if (errors.length === 0) {
+    return <>{text}</>;
+  }
 
   // Ordena os erros pelo índice de início para renderizar em ordem
   const sortedErrors = [...errors].sort((a, b) => a.start - b.start);
@@ -29,17 +32,15 @@ export const TextWithCorrections = ({
   const parts: React.ReactNode[] = [];
   let cursor = 0;
 
-  sortedErrors.forEach((error, i) => {
+  sortedErrors.forEach((error, _) => {
     // Pega o texto entre o cursor e o início do erro (trecho normal)
     if (cursor < error.start) {
-      parts.push(
-        <span key={`text-${i}-before`}>{text.slice(cursor, error.start)}</span>
-      );
+      parts.push(<span key={uuidv4()}>{text.slice(cursor, error.start)}</span>);
     }
 
     // Pega o texto do erro destacado
     parts.push(
-      <Tooltip key={`error-${i}`}>
+      <Tooltip key={uuidv4()}>
         <TooltipTrigger asChild>
           <span className="cursor-help text-red-400 underline decoration-2 decoration-red-500">
             {text.slice(error.start, error.end)}

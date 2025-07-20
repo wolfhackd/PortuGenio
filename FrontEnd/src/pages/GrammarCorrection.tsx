@@ -5,7 +5,7 @@ import { Copy } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { BackPage } from '@/components/BackPage';
+import { Menubar } from '@/components/Menubar';
 import { TextWithCorrections } from '@/components/TextWithCorrections';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,11 +18,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import type { UseCorrectionErrorRequest } from '@/utils/types/use-correction-error-request';
 
 export const GrammarCorrection = () => {
   const [originalText, setOriginalText] = useState('');
   const [botResponse, setBotResponse] = useState('');
-  const [errors, setErrors] = useState<{ word: string; reason: string }[]>([]);
+  // const [errors, setErrors] = useState<{ word: string; reason: string }[]>([]);
+  const [errors, setErrors] = useState<UseCorrectionErrorRequest[]>([]);
   const [copied, setCopied] = useState(false);
 
   const GrammarCorrectionSchema = z.object({
@@ -62,89 +64,93 @@ export const GrammarCorrection = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-10 text-zinc-100">
-      <BackPage className={'absolute top-3 left-5 cursor-pointer'} />
-      <Card className="w-full max-w-3xl rounded-2xl bg-zinc-900 shadow-xl">
-        <CardHeader>
-          <CardTitle className="text-center font-bold text-3xl">
-            Correção de Frases/Textos
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form
-              className="space-y-4"
-              onSubmit={form.handleSubmit(handleCorrectionSubmit)}
-            >
-              <FormField
-                control={form.control}
-                name="textForCorrection"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Digite seu texto:</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        className="border-zinc-700 bg-zinc-800 text-zinc-100"
-                        placeholder="Ex: Eu vai na escola amanhã."
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700"
-                type="submit"
+    <div className="relative flex min-h-screen min-w-screen flex-col items-center justify-center bg-zinc-950 px-4 py-10 text-zinc-100">
+      <div className="fixed top-0 left-0 w-full">
+        <Menubar />
+      </div>
+      <div className="mt-16 flex w-full flex-1 flex-col items-center justify-center px-4 py-10">
+        <Card className="w-full max-w-3xl rounded-2xl bg-zinc-900 shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-center font-bold text-3xl">
+              Correção de Frases/Textos
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                className="space-y-4"
+                onSubmit={form.handleSubmit(handleCorrectionSubmit)}
               >
-                {correction.isPending ? 'Corrigindo...' : 'Corrigir'}
-              </Button>
-            </form>
-          </Form>
+                <FormField
+                  control={form.control}
+                  name="textForCorrection"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Digite seu texto:</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          className="border-zinc-700 bg-zinc-800 text-zinc-100"
+                          placeholder="Ex: Eu vai na escola amanhã."
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700"
+                  type="submit"
+                >
+                  {correction.isPending ? 'Corrigindo...' : 'Corrigir'}
+                </Button>
+              </form>
+            </Form>
 
-          {botResponse && (
-            <div className="mt-8 space-y-6">
-              <div>
-                <p className="mb-1 font-semibold text-zinc-400">
-                  Texto original:
-                </p>
-                <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
-                  {originalText}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-1 font-semibold text-zinc-400">
-                  Com marcações de erro:
-                </p>
-                <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
-                  <TextWithCorrections errors={errors} text={originalText} />
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-1 flex items-center justify-between">
-                  <p className="font-semibold text-zinc-400">
-                    Texto corrigido:
+            {botResponse && (
+              <div className="mt-8 space-y-6">
+                <div>
+                  <p className="mb-1 font-semibold text-zinc-400">
+                    Texto original:
                   </p>
-                  <Button
-                    className="cursor-pointer gap-2 border-zinc-600"
-                    onClick={handleCopy}
-                    size="sm"
-                    variant="outline"
-                  >
-                    <Copy size={16} />
-                    {copied ? 'Copiado!' : 'Copiar'}
-                  </Button>
+                  <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
+                    {originalText}
+                  </div>
                 </div>
-                <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
-                  {botResponse}
+
+                <div>
+                  <p className="mb-1 font-semibold text-zinc-400">
+                    Com marcações de erro:
+                  </p>
+                  <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
+                    <TextWithCorrections errors={errors} text={originalText} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mb-1 flex items-center justify-between">
+                    <p className="font-semibold text-zinc-400">
+                      Texto corrigido:
+                    </p>
+                    <Button
+                      className="cursor-pointer gap-2 border-zinc-600"
+                      onClick={handleCopy}
+                      size="sm"
+                      variant="outline"
+                    >
+                      <Copy size={16} />
+                      {copied ? 'Copiado!' : 'Copiar'}
+                    </Button>
+                  </div>
+                  <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
+                    {botResponse}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
