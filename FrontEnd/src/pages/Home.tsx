@@ -14,7 +14,7 @@ export const Home = () => {
     },
     {
       label: 'Contato',
-      path: '/',
+      path: 'https://www.linkedin.com/in/mauro-leal-b1134425a/',
     },
     {
       label: 'GitHub ',
