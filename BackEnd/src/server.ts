@@ -25,12 +25,7 @@ app.get('/health', () => {
   return 'Ok';
 });
 
-app.listen(
-  {
-    port: env.PORT,
-  },
-  () => {
-    // biome-ignore lint/suspicious/noConsole: <OnlyDev>
-    console.log(`http://localhost:${env.PORT}/`);
-  },
-);
+app.listen({ port: env.PORT, host: '0.0.0.0' }, () => {
+  // biome-ignore lint/suspicious/noConsole: <OnlyDev>
+  console.log(`http://localhost:${env.PORT}/`);
+});
