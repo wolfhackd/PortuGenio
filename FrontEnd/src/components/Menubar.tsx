@@ -16,7 +16,7 @@ export const Menubar = () => {
     },
     {
       label: 'Quiz ',
-      path: '',
+      path: '/quiz',
     },
     {
       label: 'Sobre ',

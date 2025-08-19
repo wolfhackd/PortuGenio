@@ -23,7 +23,6 @@ import type { UseCorrectionErrorRequest } from '@/utils/types/use-correction-err
 export const GrammarCorrection = () => {
   const [originalText, setOriginalText] = useState('');
   const [botResponse, setBotResponse] = useState('');
-  // const [errors, setErrors] = useState<{ word: string; reason: string }[]>([]);
   const [errors, setErrors] = useState<UseCorrectionErrorRequest[]>([]);
   const [copied, setCopied] = useState(false);
 

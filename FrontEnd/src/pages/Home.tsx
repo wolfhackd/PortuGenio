@@ -1,12 +1,9 @@
-import { useNavigate } from 'react-router';
 import { Menubar } from '@/components/Menubar';
 import { PortugueseTip } from '@/components/PortugueseTip';
 import { Button } from '@/components/ui/button';
 import type { UseFooterItens } from '@/utils/types/use-footer-itens';
 
 export const Home = () => {
-  const navigate = useNavigate();
-
   const footerItems: UseFooterItens[] = [
     {
       label: 'Política de Privacidade',
@@ -37,14 +34,8 @@ export const Home = () => {
       <footer className="flex w-full flex-col items-center justify-center p-4">
         <div>
           {footerItems.map((item) => (
-            <a href={item.path} key={item.label}>
-              <Button
-                className="cursor-pointer"
-                onClick={() => {
-                  navigate(item.label);
-                }}
-                variant={'link'}
-              >
+            <a href={item.path} key={item.label} target="_blank">
+              <Button className="cursor-pointer" variant={'link'}>
                 {item.label}
               </Button>
             </a>
