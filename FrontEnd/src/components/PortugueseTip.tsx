@@ -6,9 +6,7 @@ export function PortugueseTip() {
   const { data, isLoading, error } = useQuery<UseTipRequest>({
     queryKey: ['portugueseTip'],
     queryFn: async () => {
-      const res = await axios.get<UseTipRequest>(
-        'http://localhost:3333/getTip'
-      );
+      const res = await axios.get<UseTipRequest>('https://portugenio.onrender.com/getTip');
       return res.data;
     },
     staleTime: 1000 * 60 * 5,
@@ -22,7 +20,5 @@ export function PortugueseTip() {
     return <p className="text-red-400">Erro ao carregar dica!</p>;
   }
 
-  return (
-    <span className="font-bold text-muted-foreground">💡 {data?.tip}</span>
-  );
+  return <span className="font-bold text-muted-foreground">💡 {data?.tip}</span>;
 }
