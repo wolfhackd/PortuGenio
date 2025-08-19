@@ -1,5 +1,5 @@
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
-import { getPortugueseTip } from '../sevices/gemini/getPortugueseTip.ts';
+import { getPortugueseTip } from '../sevices/gemini/getPortugueseTip.js';
 
 export const portugueseTipRoute: FastifyPluginCallbackZod = (app) => {
   app.get('/getTip', async (_, reply) => {

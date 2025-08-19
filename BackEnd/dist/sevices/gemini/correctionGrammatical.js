@@ -1,7 +1,6 @@
 import { gemini, model } from './index.js';
-
-export async function correctionGrammatical(userText: string) {
-  const prompt = `
+export async function correctionGrammatical(userText) {
+    const prompt = `
 Tarefa:
 Corrija o texto abaixo com base nas regras da gramática normativa da língua portuguesa.
 
@@ -32,37 +31,32 @@ NÃO use blocos de código (ex: crases \`\`\` ou \`\`\`json). Apenas envie o JSO
 Texto a ser corrigido:
 "${userText.trim()}"
 `.trim();
-
-  const response = await gemini.models.generateContent({
-    model,
-    contents: [
-      {
-        text: prompt,
-      },
-    ],
-  });
-
-  if (!response?.text) {
-    throw new Error('Não foi possível gerar a resposta');
-  }
-
-  try {
-    const cleaned = response.text
-      .replace(/```json/g, '')
-      .replace(/```/g, '')
-      .trim();
-
-    const parsed = JSON.parse(cleaned);
-
-    if (parsed.text && typeof parsed.text === 'object' && parsed.text.text) {
-      return {
-        text: parsed.text.text,
-        errors: parsed.text.errors || [],
-      };
+    const response = await gemini.models.generateContent({
+        model,
+        contents: [
+            {
+                text: prompt,
+            },
+        ],
+    });
+    if (!response?.text) {
+        throw new Error('Não foi possível gerar a resposta');
     }
-
-    return parsed;
-  } catch {
-    throw new Error('Resposta inesperada do modelo');
-  }
+    try {
+        const cleaned = response.text
+            .replace(/```json/g, '')
+            .replace(/```/g, '')
+            .trim();
+        const parsed = JSON.parse(cleaned);
+        if (parsed.text && typeof parsed.text === 'object' && parsed.text.text) {
+            return {
+                text: parsed.text.text,
+                errors: parsed.text.errors || [],
+            };
+        }
+        return parsed;
+    }
+    catch {
+        throw new Error('Resposta inesperada do modelo');
+    }
 }
