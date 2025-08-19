@@ -15,7 +15,7 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.register(fastifyCors, {
-  origin: 'http://localhost:5173',
+  origin: 'https://portu-genio-wolfhackds-projects.vercel.app/',
 });
 
 app.register(grammarCorrectionRoute);
