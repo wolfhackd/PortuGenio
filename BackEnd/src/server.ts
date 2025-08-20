@@ -19,6 +19,7 @@ app.register(fastifyCors, {
     'https://portu-genio-wolfhackds-projects.vercel.app',
     'https://portu-genio-git-main-wolfhackds-projects.vercel.app',
     'http://localhost:5173',
+    'https://portu-genio.vercel.app',
   ],
 });
 
