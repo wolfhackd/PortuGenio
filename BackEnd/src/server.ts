@@ -5,7 +5,7 @@ import { config } from 'dotenv';
 config({
   path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
 });
-import { env } from '@env';
+import { env } from './env.js';
 
 import fastifyCors from '@fastify/cors';
 import fastify from 'fastify';
