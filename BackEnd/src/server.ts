@@ -1,3 +1,12 @@
+import 'dotenv/config';
+import { config } from 'dotenv';
+
+// Carrega o .env certo dependendo do NODE_ENV
+config({
+  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
+});
+import { env } from '@env';
+
 import fastifyCors from '@fastify/cors';
 import fastify from 'fastify';
 import {
@@ -5,7 +14,6 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
-import { env } from './env.js';
 import { grammarCorrectionRoute } from './routes/grammar-correction.js';
 import { portugueseTipRoute } from './routes/portugueseTip.js';
 
@@ -15,12 +23,7 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.register(fastifyCors, {
-  origin: [
-    'https://portu-genio-wolfhackds-projects.vercel.app',
-    'https://portu-genio-git-main-wolfhackds-projects.vercel.app',
-    'http://localhost:5173',
-    'https://portu-genio.vercel.app',
-  ],
+  origin: env.CORS_ORIGIN,
 });
 
 app.register(grammarCorrectionRoute);

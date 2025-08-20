@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import type { UseCorrectionErrorRequest } from '@/utils/types/use-correction-error-request';
+import { env } from '@/env';
 
 export const GrammarCorrection = () => {
   const [originalText, setOriginalText] = useState('');
@@ -37,7 +38,7 @@ export const GrammarCorrection = () => {
 
   const correction = useMutation({
     mutationFn: async (data: { text: string }) => {
-      const res = await axios.post('https://portugenio.onrender.com/correction', data);
+      const res = await axios.post(`${env.VITE_BACKEND_ORIGIN}/correction`, data);
       return res.data;
     },
     onSuccess(data) {

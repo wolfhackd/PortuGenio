@@ -11,6 +11,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "paths": {
+      "@env": ["./src/env.ts"]
+    }
   }
 }
