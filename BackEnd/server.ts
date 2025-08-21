@@ -1,12 +1,3 @@
-import 'dotenv/config';
-import { config } from 'dotenv';
-
-// Carrega o .env certo dependendo do NODE_ENV
-config({
-  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
-});
-import { env } from './env.js';
-
 import fastifyCors from '@fastify/cors';
 import fastify from 'fastify';
 import {
@@ -14,8 +5,9 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
-import { grammarCorrectionRoute } from './routes/grammar-correction.js';
-import { portugueseTipRoute } from './routes/portugueseTip.js';
+import { env } from './src/env.js';
+import { grammarCorrectionRoute } from './src/routes/grammar-correction.js';
+import { portugueseTipRoute } from './src/routes/portugueseTip.js';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
