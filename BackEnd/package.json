@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "prebuild": "npm install @types/node --no-save",
+    "prebuild": "npm install @types/node --save",
     "dev": "cross-env NODE_ENV=development tsx watch server.ts",
     "production": "cross-env NODE_ENV=production node dist/server.js",
     "start": "cross-env NODE_ENV=production node dist/server.js"
