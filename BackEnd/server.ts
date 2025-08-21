@@ -5,9 +5,9 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
-import { env } from './env.js';
-import { grammarCorrectionRoute } from './routes/grammar-correction.js';
-import { portugueseTipRoute } from './routes/portugueseTip.js';
+import { env } from './src/env.js';
+import { grammarCorrectionRoute } from './src/routes/grammar-correction.js';
+import { portugueseTipRoute } from './src/routes/portugueseTip.js';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
