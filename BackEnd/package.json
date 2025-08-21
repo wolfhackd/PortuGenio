@@ -24,6 +24,7 @@
     "ultracite": "5.0.36"
   },
   "dependencies": {
+    "@types/node": "^24.3.0",
     "@fastify/cors": "^11.0.1",
     "@google/genai": "^1.9.0",
     "dotenv": "^17.2.1",
