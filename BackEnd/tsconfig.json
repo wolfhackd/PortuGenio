@@ -3,7 +3,7 @@
   "_version": "20.1.0",
   "compilerOptions": {
     "lib": ["es2023"],
-
+    "types": ["node"],
     "typeRoots": ["./node_modules/@types"],
     "module": "nodenext",
     "target": "es2022",
