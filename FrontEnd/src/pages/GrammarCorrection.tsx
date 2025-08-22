@@ -18,8 +18,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import type { UseCorrectionErrorRequest } from '@/utils/types/use-correction-error-request';
 import { env } from '@/env';
+import type { UseCorrectionErrorRequest } from '@/utils/types/use-correction-error-request';
 
 export const GrammarCorrection = () => {
   const [originalText, setOriginalText] = useState('');
@@ -28,7 +28,9 @@ export const GrammarCorrection = () => {
   const [copied, setCopied] = useState(false);
 
   const GrammarCorrectionSchema = z.object({
-    textForCorrection: z.string().min(2, { message: 'Inclua no mínimo 2 caracteres' }),
+    textForCorrection: z
+      .string()
+      .min(2, { message: 'Inclua no mínimo 2 caracteres' }),
   });
 
   const form = useForm({
@@ -38,7 +40,10 @@ export const GrammarCorrection = () => {
 
   const correction = useMutation({
     mutationFn: async (data: { text: string }) => {
-      const res = await axios.post(`${env.VITE_BACKEND_ORIGIN}/correction`, data);
+      const res = await axios.post(
+        `${env.VITE_BACKEND_ORIGIN}/correction`,
+        data
+      );
       return res.data;
     },
     onSuccess(data) {
@@ -48,7 +53,9 @@ export const GrammarCorrection = () => {
     },
   });
 
-  const handleCorrectionSubmit = async (data: { textForCorrection: string }) => {
+  const handleCorrectionSubmit = async (data: {
+    textForCorrection: string;
+  }) => {
     await correction.mutateAsync({ text: data.textForCorrection });
     form.reset();
   };
@@ -73,7 +80,10 @@ export const GrammarCorrection = () => {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form className="space-y-4" onSubmit={form.handleSubmit(handleCorrectionSubmit)}>
+              <form
+                className="space-y-4"
+                onSubmit={form.handleSubmit(handleCorrectionSubmit)}
+              >
                 <FormField
                   control={form.control}
                   name="textForCorrection"
@@ -103,14 +113,18 @@ export const GrammarCorrection = () => {
             {botResponse && (
               <div className="mt-8 space-y-6">
                 <div>
-                  <p className="mb-1 font-semibold text-zinc-400">Texto original:</p>
+                  <p className="mb-1 font-semibold text-zinc-400">
+                    Texto original:
+                  </p>
                   <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
                     {originalText}
                   </div>
                 </div>
 
                 <div>
-                  <p className="mb-1 font-semibold text-zinc-400">Com marcações de erro:</p>
+                  <p className="mb-1 font-semibold text-zinc-400">
+                    Com marcações de erro:
+                  </p>
                   <div className="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-3">
                     <TextWithCorrections errors={errors} text={originalText} />
                   </div>
@@ -118,7 +132,9 @@ export const GrammarCorrection = () => {
 
                 <div>
                   <div className="mb-1 flex items-center justify-between">
-                    <p className="font-semibold text-zinc-400">Texto corrigido:</p>
+                    <p className="font-semibold text-zinc-400">
+                      Texto corrigido:
+                    </p>
                     <Button
                       className="cursor-pointer gap-2 border-zinc-600"
                       onClick={handleCopy}
