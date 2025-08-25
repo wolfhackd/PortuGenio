@@ -9,8 +9,8 @@ Ele foi desenvolvido para ajudar estudantes e entusiastas da língua portuguesa 
 
 Aqui estão algumas imagens do projeto:
 
-![Tela inicial]()  
-![Exemplo de exercício]()
+![Tela inicial](./assets/PortuguenioInicio.jpg)  
+![Exemplo de exercício](./assets/TelaCorrecao.jpg)
 
 ---
 
@@ -53,11 +53,6 @@ npm run dev #Opcional (Rodar em produção)
 #Atenção Back end já adaptado para subir em produção
 
 # Comandos para rodar a aplicação backend
-    # "build": "tsc",
-    # "prebuild": "npm install --include=dev",
-    # "dev": "cross-env NODE_ENV=development tsx watch server.ts",
-    # "production": "cross-env NODE_ENV=production node dist/server.js",
-    # "start": "node dist/server.js"
 
 npm run dev #Rodar Backend
 npm run build # Opcional
