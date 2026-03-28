@@ -12,8 +12,7 @@ Aqui estão algumas imagens do projeto:
 ![Tela inicial](./assets/PortuguenioInicio.jpg)  
 ![Exemplo de exercício](./assets/TelaCorrecao.jpg)
 
----
-✔ Online: https://portu-genio.vercel.app/
+
 ---
 
 ## 🛠️ Tecnologias Utilizadas
